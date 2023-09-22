@@ -906,8 +906,26 @@ class Client():
     else:
       raise Client_Exception('Unable to retrieve custom reports list')
     
+  def list_facility_production(self, facility_ids = None, start_date = None, end_date = None):
+    logger.debug('Getting facility production list')
+    headers = self._get_headers()
+    params = {}
+    if facility_ids:
+      params['facility_ids'] = facility_ids
+    if start_date:
+      params['start_date'] = start_date
+    if end_date:
+      params['end_date'] = end_date
+    result = self.session.get('{}/v1/facilities/production'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      reports = result.json()
+      logger.debug('facility production: {}'.format(reports))
+      return reports
+    else:
+      raise Client_Exception('Unable to retrieve facility production')
+  
   def list_facility_daily_sales(self, facility_ids = None, start_date = None, end_date = None):
-    logger.debug('Getting facility based report list')
+    logger.debug('Getting facility daily sales')
     headers = self._get_headers()
     params = {}
     if facility_ids:
@@ -919,10 +937,10 @@ class Client():
     result = self.session.get('{}/v1/facilities/sales/daily'.format(self.url), headers=headers, params=params)
     if result.status_code == 200:
       reports = result.json()
-      logger.debug('custom reports: {}'.format(reports))
+      logger.debug('facility daily sales: {}'.format(reports))
       return reports
     else:
-      raise Client_Exception('Unable to retrieve facility based report list')
+      raise Client_Exception('Unable to retrieve facility daily sales')
   
   def list_report_tank_gauge(self, well_ids = None, start_date = None, end_date = None):
     logger.debug('Getting tank gauge report list')
