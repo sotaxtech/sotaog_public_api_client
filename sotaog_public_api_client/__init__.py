@@ -275,6 +275,19 @@ class Client():
     else:
       raise Client_Exception('Unable to get compressors')
 
+    
+  def get_vru_compressors(self):
+    logger.debug('Getting VRU compressors')
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/vru-compressors'.format(self.url), headers=headers)
+    if result.status_code == 200:
+      compressors = result.json()
+      logger.debug('Compressors: {}'.format(compressors))
+      return compressors
+    else:
+      raise Client_Exception('Unable to get compressors')
+
+
   def get_customers(self):
     logger.debug('Getting customers')
     headers = self._get_headers()
