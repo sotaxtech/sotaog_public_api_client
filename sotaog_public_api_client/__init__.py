@@ -1017,3 +1017,31 @@ class Client():
       return response
     else:
       raise Client_Exception('Unable to retrieve today predicted')    
+
+  def get_cimarron_raw_data(self, customer, start_date = None, end_date = None):
+    logger.debug('Getting data for cimarron')
+    headers = self._get_headers()
+    params = {}
+    params['customer'] = customer
+    if start_date:
+      params['start_date'] = start_date
+    if end_date:
+      params['end_date'] = end_date
+    result = self.session.get('{}/v2/cimarron-raw-data'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      reports = result.json()
+      logger.debug('cimarron data: {}'.format(reports))
+      return reports
+    else:
+      raise Client_Exception('Unable to load cimarron raw data')
+
+  def post_cimarron_raw_data(self, body):
+    logger.debug('saving data {}'.format(body))
+    headers = self._get_headers()
+    result = self.session.post('{}/v2/cimarron-raw-data'.format(self.url), headers=headers, json=body)
+    if result.status_code == 200:
+      created = result.json()
+      logger.debug('Cimarron raw data: {}'.format(created))
+      return created
+    else:
+      raise Client_Exception('Unable to save Cimarron raw data')
