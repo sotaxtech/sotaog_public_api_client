@@ -182,6 +182,17 @@ class Client():
     else:
       raise Client_Exception('Unable to retrieve alarms for {}'.format(asset_id))
 
+  def get_leases(self):
+    logger.debug('Getting leases')
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/leases'.format(self.url), headers=headers)
+    if result.status_code == 200:
+      leases = result.json()
+      logger.debug('Leases: {}'.format(leases))
+      return leases
+    else:
+      raise Client_Exception('Unable to retrieve leases')
+
   def get_facilities(self):
     logger.debug('Getting facilities')
     headers = self._get_headers()
@@ -540,6 +551,27 @@ class Client():
     if result.status_code != 201:
       logger.exception(result.json())
       raise Exception('Unable to batch create well production')
+  
+  def get_compressors_downtime(self, compressor_ids = None, facility_ids = None, start_date = None, end_date = None):
+    logger.debug('Getting compressors downtime for {}'.format(compressor_ids))
+    headers = self._get_headers()   
+    params = {}
+    if compressor_ids:
+      params['compressor_ids'] = compressor_ids
+    if facility_ids:
+      params['facility_ids'] = facility_ids
+    if start_date:
+      params['start_date'] = start_date
+    if end_date:
+      params['end_date'] = end_date
+    result = self.session.get('{}/v1/compressors/downtime'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      compressors_downtime = result.json()
+      logger.debug('Compressors downtime: {}'.format(compressors_downtime))
+      return compressors_downtime
+    else:
+      logger.exception(result.json())
+      raise Exception('Unable to retrieve compressor downtime')
     
   def put_compressor_downtime(self, compressor):
     logger.debug('Creating compressor downtime for {}'.format(compressor))
