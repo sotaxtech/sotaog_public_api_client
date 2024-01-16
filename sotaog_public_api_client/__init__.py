@@ -227,6 +227,17 @@ class Client():
     else:
       raise Client_Exception('Unable to retrieve config')
 
+  def get_platforms(self):
+    logger.debug('Getting platforms')
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/platforms'.format(self.url), headers=headers)
+    if result.status_code == 200:
+      platforms = result.json()
+      logger.debug('Platforms: {}'.format(platforms))
+      return platforms
+    else:
+      raise Client_Exception('Unable to retrieve platforms')
+
   def get_asset(self, asset_id, type = 'assets'):
     logger.debug('Getting asset {} of type: {}'.format(asset_id, type))
     headers = self._get_headers()
