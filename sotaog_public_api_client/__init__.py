@@ -1088,3 +1088,17 @@ class Client():
       return created
     else:
       raise Client_Exception('Unable to save Cimarron raw data')
+    
+  def get_vru_status_code(self, codeType):
+    logger.debug('Getting vru compressors status code')
+    headers = self._get_headers()
+    params = {}
+    if codeType:
+      params['key'] = codeType
+    result = self.session.get('{}/v1/vru-compressors-status-code'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      status_codes = result.json()
+      logger.debug('vru compressors status code: {}'.format(status_codes))
+      return status_codes
+    else:
+      raise Client_Exception('Unable to get vru compressors status code')
