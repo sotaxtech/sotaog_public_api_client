@@ -1102,3 +1102,17 @@ class Client():
       return status_codes
     else:
       raise Client_Exception('Unable to get vru compressors status code')
+
+  def get_collection_config(self, customer_label, facility_id):
+    logger.debug('Getting collection config')
+    headers = self._get_headers()
+    params = {}
+    params['customer_label'] = customer_label
+    params['facility_id'] = facility_id
+    result = self.session.get('{}/v1/collection-config'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      config = result.json()
+      logger.debug('Collection config: {}'.format(config))
+      return config
+    else:
+      raise Client_Exception('Unable to get collection config')
