@@ -1088,7 +1088,22 @@ class Client():
       return created
     else:
       raise Client_Exception('Unable to save Cimarron raw data')
-    
+  
+  def get_scheduled_data(self, customer, month = None):
+    logger.debug('Getting scheduled data for cimarron')
+    headers = self._get_headers()
+    params = {}
+    params['customer_id'] = customer
+    if month:
+      params['month'] = month
+    result = self.session.get('{}/v2/scheduled-data'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      scheduled_data = result.json()
+      logger.debug('cimarron scheduled data: {}'.format(scheduled_data))
+      return scheduled_data
+    else:
+      raise Client_Exception('Unable to load cimarron scheduled data')
+ 
   def get_vru_status_code(self, codeType):
     logger.debug('Getting vru compressors status code')
     headers = self._get_headers()
