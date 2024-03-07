@@ -1131,3 +1131,47 @@ class Client():
       return config
     else:
       raise Client_Exception('Unable to get collection config')
+
+  def put_facility_production(self, body):
+    logger.debug('saving data {}'.format(body))
+    headers = self._get_headers()
+    result = self.session.put('{}/v1/facilities/production'.format(self.url), headers=headers, json=body)
+    if result.status_code == 200:
+      created = result.json()
+      logger.debug('facility production: {}'.format(created))
+      return created
+    else:
+      raise Client_Exception('Unable to save facility production data')
+    
+  def put_facility_daily_sales(self, body):
+    logger.debug('saving data {}'.format(body))
+    headers = self._get_headers()
+    result = self.session.put('{}/v1/facilities/sales/daily'.format(self.url), headers=headers, json=body)
+    if result.status_code == 200:
+      created = result.json()
+      logger.debug('facility sales: {}'.format(created))
+      return created
+    else:
+      raise Client_Exception('Unable to save facility sales data')
+
+  def put_tank_production(self, body):
+    logger.debug('saving data {}'.format(body))
+    headers = self._get_headers()
+    result = self.session.put('{}/v1/tanks/production'.format(self.url), headers=headers, json=body)
+    if result.status_code == 200:
+      created = result.json()
+      logger.debug('tank production: {}'.format(created))
+      return created
+    else:
+      raise Client_Exception('Unable to save tank production data')
+    
+  def put_tank_daily_sales(self, body):
+    logger.debug('saving data {}'.format(body))
+    headers = self._get_headers()
+    result = self.session.put('{}/v1/tanks/sales/daily'.format(self.url), headers=headers, json=body)
+    if result.status_code == 200:
+      created = result.json()
+      logger.debug('tank sales: {}'.format(created))
+      return created
+    else:
+      raise Client_Exception('Unable to save tank sales data')
