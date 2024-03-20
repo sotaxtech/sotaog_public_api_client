@@ -1175,3 +1175,16 @@ class Client():
       return created
     else:
       raise Client_Exception('Unable to save tank sales data')
+
+  def get_customer_setting(self, key: str):
+    logger.debug('Getting collection config')
+    headers = self._get_headers()
+    params = {}
+    params['key'] = key
+    result = self.session.get('{}/v1/customers/setting'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      config = result.json()
+      logger.debug('Customers setting: {}'.format(config))
+      return config
+    else:
+      raise Client_Exception('Unable to get customers setting')
