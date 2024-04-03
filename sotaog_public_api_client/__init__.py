@@ -1188,3 +1188,14 @@ class Client():
       return config
     else:
       raise Client_Exception('Unable to get customers setting')
+
+  def get_wells_setting(self):
+    logger.debug('Getting wells setting')
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/wells/setting'.format(self.url), headers=headers)
+    if result.status_code == 200:
+      setting = result.json()
+      logger.debug('Wells setting: {}'.format(setting))
+      return setting
+    else:
+      raise Client_Exception('Unable to get wells setting')
