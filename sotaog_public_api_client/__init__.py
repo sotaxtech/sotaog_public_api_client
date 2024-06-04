@@ -1198,4 +1198,4 @@ class Client():
       logger.debug('Wells setting: {}'.format(setting))
       return setting
     else:
-      raise Client_Exception('Unable to get wells setting')
+      return {}
