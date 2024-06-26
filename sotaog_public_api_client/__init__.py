@@ -1199,3 +1199,11 @@ class Client():
       return setting
     else:
       return {}
+    
+  def batch_put_production_field_team_with_avocet(self, production):
+    logger.debug('Creating well production by field team for {}'.format(production))
+    headers = self._get_headers()
+    result = self.session.put('{}/v2/production/field-team-with-avocet'.format(self.url), headers=headers, json=production)
+    if result.status_code != 201:
+      logger.exception(result.json())
+      raise Exception('Unable to batch create well production by field team')
