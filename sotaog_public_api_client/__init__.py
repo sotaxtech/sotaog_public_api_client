@@ -1207,3 +1207,36 @@ class Client():
     if result.status_code != 201:
       logger.exception(result.json())
       raise Exception('Unable to batch create well production by field team')
+  
+  def get_setpoint_alarm_incidents(self,asset_id: str = None, datatype_id: str = None, status: str = None, start_time: int = None, end_time: int = None):
+    logger.debug('Getting alarms')
+    headers = self._get_headers()
+    params = {}
+    if asset_id:
+      params['asset_id'] = asset_id
+    if datatype_id:
+      params['datatype_id'] = datatype_id
+    if status:
+      params['status'] = status
+    if start_time:
+      params['start_time'] = start_time
+    if end_time:
+      params['end_date'] = end_time
+    result =  self.session.get('{}/v1/alarms-incidents'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      alarms = result.json()
+      logger.debug('Alarms: {}'.format(alarms))
+      return alarms
+    else:
+      raise Client_Exception('Unable to retrieve alarms')
+  
+  def post_setpoint_alarm_incidents(self, incidents):
+    logger.debug('Creating Alarm Incidents {}'.format(incidents))
+    headers = self._get_headers()
+    result = self.session.put('{}/v1/alarms-incidents'.format(self.url), headers=headers, json=incidents)
+    if result.status_code == 200:
+      created = result.json()
+      logger.debug('Alarms Incidents: {}'.format(created))
+      return created
+    else:
+      raise Client_Exception('Unable to create Alarm Incidents')
