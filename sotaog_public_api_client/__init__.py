@@ -144,7 +144,6 @@ class Client():
     else:
       raise Client_Exception('Unable to create Alarm Incidents')
   
-  
   def get_alarm_incidents(self,alarm_id, well_id, alarm_status):
     logger.debug('Getting alarms')
     headers = self._get_headers()
@@ -157,6 +156,17 @@ class Client():
     else:
       raise Client_Exception('Unable to retrieve alarms')
   
+  def get_alarm_notifications(self):
+    logger.debug('Getting collection config')
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/alarm-notifications'.format(self.url), headers=headers)
+    if result.status_code == 200:
+      config = result.json()
+      logger.debug('Alarm notification: {}'.format(config))
+      return config
+    else:
+      raise Client_Exception('Unable to get Alarm notification')
+
   def post_custom_alarm_incidents(self, incidents):
     logger.debug('Creating Alarm Incidents {}'.format(incidents))
     headers = self._get_headers()
