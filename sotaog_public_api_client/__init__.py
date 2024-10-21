@@ -1250,3 +1250,19 @@ class Client():
       return created
     else:
       raise Client_Exception('Unable to create Alarm Incidents')
+    
+  def get_asset_inflections(self, asset_id, start_ts , end_ts, datatypes=[]):
+    logger.debug('Getting inflections for asset: {}'.format(asset_id))
+    headers = self._get_headers()
+    params = {}
+    params['start_ts'] = start_ts
+    params['end_ts'] = end_ts
+    if datatypes:
+      params['datatypes'] = datatypes
+    result = self.session.get('{}/v1/wells/{}/analyse-inflection-points'.format(self.url, asset_id), headers=headers, params=params)
+    if result.status_code == 200:
+      datapoints = result.json()
+      logger.debug('Datapoints: {}'.format(datapoints))
+      return datapoints
+    else:
+      raise Client_Exception('Unable to get inflection regions')
