@@ -565,6 +565,30 @@ class Client():
       logger.exception(result.json())
       raise Exception('Unable to post datapoints')
 
+  """
+    Write datapoints for multiple entities in a single request.
+    
+    Expected body format:
+    {
+        "entities": {
+            "entity_id_1": {
+                "datatype_1": [[timestamp1, value1], [timestamp2, value2]],
+                "datatype_2": [[timestamp1, value1], [timestamp2, value2]]
+            },
+            "entity_id_2": {
+                "datatype_1": [[timestamp1, value1], [timestamp2, value2]]
+            }
+        }
+    }
+  """
+  def batch_multiple_datapoints(self, datapoints):
+    logger.debug('Posting datapoints for multiple assets')
+    headers = self._get_headers()
+    result = self.session.post('{}/v1/datapoints/multiple'.format(self.url), headers=headers, json=datapoints)
+    if result.status_code != 202:
+      logger.exception(result.json())
+      raise Exception('Unable to post multiple datapoints')
+
   def batch_put_well_production(self, production):
     logger.debug('Creating well production for {}'.format(production))
     headers = self._get_headers()
