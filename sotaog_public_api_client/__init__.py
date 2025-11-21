@@ -319,6 +319,28 @@ class Client():
     else:
       raise Client_Exception('Unable to get compressors')
 
+  def get_compressor_customer(self, compressor_customer_id):
+    logger.debug('Getting compressor customer {}'.format(compressor_customer_id))
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/compressors/customers/{}'.format(self.url, compressor_customer_id), headers=headers)
+    if result.status_code == 200:
+      compressor_customer = result.json()
+      logger.debug('Compressor customer: {}'.format(compressor_customer))
+      return compressor_customer
+    else:
+      raise Client_Exception('Unable to get compressor customer {}'.format(compressor_customer_id))
+
+  def get_compressor_customers(self):
+    logger.debug('Getting compressor customers')
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/compressors/customers'.format(self.url), headers=headers)
+    if result.status_code == 200:
+      compressor_customers = result.json()
+      logger.debug('Compressor customers: {}'.format(compressor_customers))
+      return compressor_customers
+    else:
+      raise Client_Exception('Unable to get compressor customers')
+
 
   def get_customers(self):
     logger.debug('Getting customers')
@@ -625,6 +647,55 @@ class Client():
     if result.status_code != 201:
       logger.exception(result.json())
       raise Exception('Unable to create compressor downtime')
+
+  def get_compressors_fault_hours(self, compressor_ids = None, start_date = None, end_date = None):
+    logger.debug('Getting compressors fault hours for {}'.format(compressor_ids))
+    headers = self._get_headers()   
+    params = {}
+    if compressor_ids:
+      params['compressor_ids'] = compressor_ids
+    if start_date:
+      params['start_date'] = start_date
+    if end_date:
+      params['end_date'] = end_date
+    result = self.session.get('{}/v1/compressors/fault-hours'.format(self.url), headers=headers, params=params)
+    if result.status_code == 200:
+      compressors_fault_hours = result.json()
+      logger.debug('Compressors fault hours: {}'.format(compressors_fault_hours))
+      return compressors_fault_hours
+    else:
+      logger.exception(result.json())
+      raise Exception('Unable to retrieve compressor fault hours')
+
+  def get_compressor_fault_hours(self, compressor_id, date):
+    logger.debug('Getting compressor fault hours for {} on {}'.format(compressor_id, date))
+    headers = self._get_headers()
+    result = self.session.get('{}/v1/compressors/fault-hours/{}/{}'.format(self.url, compressor_id, date), headers=headers)
+    if result.status_code == 200:
+      compressor_fault_hours = result.json()
+      logger.debug('Compressor fault hours: {}'.format(compressor_fault_hours))
+      return compressor_fault_hours
+    else:
+      logger.exception(result.json())
+      raise Exception('Unable to retrieve compressor fault hours for {} on {}'.format(compressor_id, date))
+
+  def put_compressor_fault_hours(self, compressor_id, date, fault_hours):
+    logger.debug('Creating/updating compressor fault hours for {} on {}: {}'.format(compressor_id, date, fault_hours))
+    headers = self._get_headers()
+    result = self.session.put('{}/v1/compressors/fault-hours/{}/{}'.format(self.url, compressor_id, date), headers=headers, json=fault_hours)
+    if result.status_code != 200:
+      logger.exception(result.json())
+      raise Exception('Unable to create/update compressor fault hours')
+    return result.json()
+
+  def delete_compressor_fault_hours(self, compressor_id, date):
+    logger.debug('Deleting compressor fault hours for {} on {}'.format(compressor_id, date))
+    headers = self._get_headers()
+    result = self.session.delete('{}/v1/compressors/fault-hours/{}/{}'.format(self.url, compressor_id, date), headers=headers)
+    if result.status_code != 200:
+      logger.exception(result.json())
+      raise Exception('Unable to delete compressor fault hours for {} on {}'.format(compressor_id, date))
+    return result.json()
 
   def put_well_production(self, well_id, date, production):
     logger.debug('Creating well production for {} {}: {}'.format(well_id, date, production))
