@@ -319,29 +319,6 @@ class Client():
     else:
       raise Client_Exception('Unable to get compressors')
 
-  def get_compressor_customer(self, compressor_customer_id):
-    logger.debug('Getting compressor customer {}'.format(compressor_customer_id))
-    headers = self._get_headers()
-    result = self.session.get('{}/v1/compressors/customers/{}'.format(self.url, compressor_customer_id), headers=headers)
-    if result.status_code == 200:
-      compressor_customer = result.json()
-      logger.debug('Compressor customer: {}'.format(compressor_customer))
-      return compressor_customer
-    else:
-      raise Client_Exception('Unable to get compressor customer {}'.format(compressor_customer_id))
-
-  def get_compressor_customers(self):
-    logger.debug('Getting compressor customers')
-    headers = self._get_headers()
-    result = self.session.get('{}/v1/compressors/customers'.format(self.url), headers=headers)
-    if result.status_code == 200:
-      compressor_customers = result.json()
-      logger.debug('Compressor customers: {}'.format(compressor_customers))
-      return compressor_customers
-    else:
-      raise Client_Exception('Unable to get compressor customers')
-
-
   def get_customers(self):
     logger.debug('Getting customers')
     headers = self._get_headers()
