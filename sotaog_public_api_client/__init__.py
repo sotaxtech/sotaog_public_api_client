@@ -1322,6 +1322,15 @@ class Client():
       return created
     else:
       raise Client_Exception('Unable to create Alarm Incidents')
+
+  def delete_setpoint_alarm_incidents(self, incident_id):
+    logger.debug('Deleting setpoint alarm incidents for {}'.format(incident_id))
+    headers = self._get_headers()
+    result = self.session.delete('{}/v1/alarms-incidents/{}'.format(self.url, incident_id), headers=headers)
+    if result.status_code != 200:
+      logger.exception(result.json())
+      raise Exception('Unable to delete setpoint alarm incidents for {}'.format(incident_id))
+    return result.json()
     
   def get_asset_inflections(self, asset_id, start_ts , end_ts, datatypes=[]):
     logger.debug('Getting inflections for asset: {}'.format(asset_id))
